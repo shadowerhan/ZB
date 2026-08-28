@@ -1,0 +1,2 @@
+"use client"; import { useState } from "react"; import Link from "next/link";
+export function CookieConsent(){const [show,setShow]=useState(true);if(!show)return null;return <aside className="cookie" aria-label="Çerez tercihleri"><b>Gizliliğiniz bizim için önemli</b><p>Zorunlu çerezleri kullanıyoruz. Analitik ve pazarlama çerezleri yalnızca izninizle etkinleşir. <Link href="/cerez-politikasi">Detaylar</Link></p><div><button className="ghost" onClick={()=>setShow(false)}>Yalnızca zorunlu</button><button onClick={()=>setShow(false)}>Tümünü kabul et</button></div></aside>}
