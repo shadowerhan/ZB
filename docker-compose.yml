@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: novex
+      POSTGRES_USER: novex
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U novex"], interval: 10s, timeout: 5s, retries: 5 }
+    restart: unless-stopped
+  web:
+    build: .
+    env_file: .env
+    depends_on: { db: { condition: service_healthy } }
+    expose: ["3000"]
+    restart: unless-stopped
+  nginx:
+    image: nginx:1.27-alpine
+    ports: ["80:80", "443:443"]
+    volumes: ["./nginx/nginx.conf:/etc/nginx/nginx.conf:ro", "./nginx/certs:/etc/nginx/certs:ro"]
+    depends_on: [web]
+    restart: unless-stopped
+volumes: { postgres_data: {} }
